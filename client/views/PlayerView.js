@@ -12,7 +12,7 @@ var PlayerView = Backbone.View.extend({
     'ended': function() {
       //tell songQueue
       this.model.dequeue();
-      console.log("removed");
+      console.log("dequeued called");
     }
   },
 

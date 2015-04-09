@@ -3,9 +3,23 @@ var AppModel = Backbone.Model.extend({
 
   doSomething: function(song) {
     //when it is the only song in the song queue
-    if(this.get('songQueue').length === 1) {
-      this.set('currentSong', song);
-    };
+    if(this.get('songQueue').length === 0 && !this.get('currentSong').has("url")) {
+      song.play();
+    } else {
+      this.get('songQueue').add(song);
+    }
+
+
+  },
+
+  doSomething2: function(song) {
+    if (this.get('songQueue').length > 0) {
+      this.get('songQueue').at(0).play();
+      this.get('songQueue').remove(this.get('songQueue').at(0));
+
+    } else {
+      this.set('currentSong', new SongModel());
+    }
   },
 
   initialize: function(params){
@@ -23,25 +37,22 @@ var AppModel = Backbone.Model.extend({
     getting called from the window (unless we override it, as we do here). */
 
 
-
-
     params.library.on('play', function(song){
       this.set('currentSong', song);
     }, this);
 
     params.library.on('enqueue', function(song){
-
-      this.get('songQueue').add(song);
-      console.log("added" + song);
-      console.dir(this.get('songQueue'));
       this.doSomething(song);
+
+      //this.get('songQueue').add(song);
+
     }, this);
 
     params.library.on('dequeue', function(song){
-      console.dir(this.get('songQueue'));
-      this.get('songQueue').remove(song);
-      console.dir(this.get('songQueue'));
-      this.doSomething(song);
+
+
+      //this.get('songQueue').remove(song);
+      this.doSomething2(song);
 
     },this);
   }
